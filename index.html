@@ -797,6 +797,19 @@ async function ensureStudentId(uid){
       <button id="loginBtn" type="button" style="width:100%;padding:13px;margin-top:8px;border:none;border-radius:10px;background:#111;color:#fff;cursor:pointer;font-weight:700;">Login</button>
     </div>
     <div id="accountSignupPanel" style="display:none;">
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+  <button id="emailSignupTab" type="button">Email Signup</button>
+            <div id="phoneSignupPanel" style="display:none;">
+  <input id="phoneNumber" type="tel" placeholder="+91 9876543210">
+  <button id="sendOtpBtn" type="button">Send OTP</button>
+
+  <input id="otpCode" type="text" placeholder="Enter OTP" style="display:none;">
+  <button id="verifyOtpBtn" type="button" style="display:none;">Verify OTP</button>
+
+  <div id="recaptcha-container"></div>
+            </div>
+  <button id="phoneSignupTab" type="button">Phone OTP</button>
+        </div>
       <input id="registerName" type="text" placeholder="Full Name" autocomplete="name" style="width:100%;padding:13px;margin:7px 0;box-sizing:border-box;border:1px solid #ddd;border-radius:10px;">
       <input id="registerDOB" type="date" style="width:100%;padding:13px;margin:7px 0;box-sizing:border-box;border:1px solid #ddd;border-radius:10px;">
       <input id="registerEmail" type="email" placeholder="Email" autocomplete="email" style="width:100%;padding:13px;margin:7px 0;box-sizing:border-box;border:1px solid #ddd;border-radius:10px;">
@@ -885,11 +898,13 @@ async function ensureStudentId(uid){
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged,RecaptchaVerifier, 
+signInWithPhoneNumber} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where, runTransaction } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyBZYc90TM1p9eXE56K6V-q1EZrpF_E1aD8",authDomain:"lakshya-tutorial-8d4bf.firebaseapp.com",projectId:"lakshya-tutorial-8d4bf",storageBucket:"lakshya-tutorial-8d4bf.firebasestorage.app",messagingSenderId:"1022368652605",appId:"1:1022368652605:web:9a170b155cfc4fb07bb954"};
 const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app);
+    const appVerifier = new RecaptchaVerifier(auth, 'recaptcha-container');
 const modal=document.getElementById('accountModal'), topBtn=document.getElementById('topLoginBtn');
 const message=document.getElementById('authMessage');
 
@@ -909,6 +924,9 @@ document.getElementById('accountClose').addEventListener('click',closeModal);
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
 document.getElementById('accountLoginTab').addEventListener('click',()=>showPanel('login'));
 document.getElementById('accountSignupTab').addEventListener('click',()=>showPanel('signup'));
+    document.getElementById('phoneSignupTab').addEventListener('click',()=>{
+  document.getElementById('phoneSignupPanel').style.display='block';
+});
 
 topBtn.addEventListener('click',async()=>{
   if(auth.currentUser){
@@ -935,7 +953,45 @@ document.getElementById('registerBtn').addEventListener('click',async()=>{
     setTimeout(closeModal,600);
   }catch(e){message.textContent=e.message;}
 });
+document.getElementById('sendOtpBtn').addEventListener('click', async ()=>{
+  const phoneNumber = document.getElementById('phoneNumber').value.trim();
 
+  if(!phoneNumber){
+    alert('Please enter your phone number.');
+    return;
+  }
+
+  try{
+    window.phoneConfirmation =
+      await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+
+    alert('OTP sent successfully.');
+    document.getElementById('otpCode').style.display='block';
+    document.getElementById('verifyOtpBtn').style.display='block';
+  }catch(error){
+    console.error(error);
+    alert('Could not send OTP: ' + error.message);
+  }
+});
+    document.getElementById('verifyOtpBtn').addEventListener('click', async ()=>{
+  const otp = document.getElementById('otpCode').value.trim();
+
+  if(!otp){
+    alert('Please enter the OTP.');
+    return;
+  }
+
+  try{
+    const result = await window.phoneConfirmation.confirm(otp);
+    const user = result.user;
+
+    alert('Phone verified successfully!');
+
+  }catch(error){
+    console.error(error);
+    alert('Invalid OTP: ' + error.message);
+  }
+});
 document.getElementById('loginBtn').addEventListener('click',async()=>{
   const email=document.getElementById('loginEmail').value.trim(), password=document.getElementById('loginPassword').value;
   if(!email||!password){message.textContent='Please enter email and password.';return;}
