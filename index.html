@@ -984,6 +984,18 @@ document.getElementById('sendOtpBtn').addEventListener('click', async ()=>{
   try{
     const result = await window.phoneConfirmation.confirm(otp);
     const user = result.user;
+      const name = document.getElementById('registerName').value.trim();
+const dob = document.getElementById('registerDOB').value;
+
+await setDoc(doc(db,'students',user.uid),{
+  name,
+  dob,
+  phone:user.phoneNumber || '',
+  email:'',
+  studentId:''
+},{merge:true});
+
+await ensureStudentId(user.uid);
 
     alert('Phone verified successfully!');
 
