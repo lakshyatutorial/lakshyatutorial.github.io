@@ -923,9 +923,22 @@ function closeModal(){modal.style.display='none';document.body.style.overflow=''
 document.getElementById('accountClose').addEventListener('click',closeModal);
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
 document.getElementById('accountLoginTab').addEventListener('click',()=>showPanel('login'));
-document.getElementById('accountSignupTab').addEventListener('click',()=>showPanel('signup'));
+document.getElementById('accountSignupTab').addEventListener('click',()=>{
+  showPanel('signup');
+  document.getElementById('phoneSignupPanel').style.display='none';
+  document.getElementById('registerName').style.display='block';
+  document.getElementById('registerDOB').style.display='block';
+  document.getElementById('registerEmail').style.display='block';
+  document.getElementById('registerPassword').style.display='block';
+  document.getElementById('registerBtn').style.display='block';
+});
     document.getElementById('phoneSignupTab').addEventListener('click',()=>{
   document.getElementById('phoneSignupPanel').style.display='block';
+  document.getElementById('registerName').style.display='none';
+  document.getElementById('registerDOB').style.display='none';
+  document.getElementById('registerEmail').style.display='none';
+  document.getElementById('registerPassword').style.display='none';
+  document.getElementById('registerBtn').style.display='none';
 });
 
 topBtn.addEventListener('click',async()=>{
