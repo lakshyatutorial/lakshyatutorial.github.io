@@ -966,57 +966,8 @@ document.getElementById('registerBtn').addEventListener('click',async()=>{
     setTimeout(closeModal,600);
   }catch(e){message.textContent=e.message;}
 });
-document.getElementById('sendOtpBtn').addEventListener('click', async ()=>{
-  const phoneNumber = document.getElementById('phoneNumber').value.trim();
 
-  if(!phoneNumber){
-    alert('Please enter your phone number.');
-    return;
-  }
-
-  try{
-    window.phoneConfirmation =
-      await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-
-    alert('OTP sent successfully.');
-    document.getElementById('otpCode').style.display='block';
-    document.getElementById('verifyOtpBtn').style.display='block';
-  }catch(error){
-    console.error(error);
-    alert('Could not send OTP: ' + error.message);
-  }
-});
-    document.getElementById('verifyOtpBtn').addEventListener('click', async ()=>{
-  const otp = document.getElementById('otpCode').value.trim();
-
-  if(!otp){
-    alert('Please enter the OTP.');
-    return;
-  }
-
-  try{
-    const result = await window.phoneConfirmation.confirm(otp);
-    const user = result.user;
-      const name = document.getElementById('registerName').value.trim();
-const dob = document.getElementById('registerDOB').value;
-
-await setDoc(doc(db,'students',user.uid),{
-  name,
-  dob,
-  phone:user.phoneNumber || '',
-  email:'',
-  studentId:''
-},{merge:true});
-
-await ensureStudentId(user.uid);
-
-    alert('Phone verified successfully!');
-
-  }catch(error){
-    console.error(error);
-    alert('Invalid OTP: ' + error.message);
-  }
-});
+    
 document.getElementById('loginBtn').addEventListener('click',async()=>{
   const email=document.getElementById('loginEmail').value.trim(), password=document.getElementById('loginPassword').value;
   if(!email||!password){message.textContent='Please enter email and password.';return;}
