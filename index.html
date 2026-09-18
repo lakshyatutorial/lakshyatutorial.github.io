@@ -890,7 +890,7 @@ import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where, r
 
 const firebaseConfig={apiKey:"AIzaSyBZYc90TM1p9eXE56K6V-q1EZrpF_E1aD8",authDomain:"lakshya-tutorial-8d4bf.firebaseapp.com",projectId:"lakshya-tutorial-8d4bf",storageBucket:"lakshya-tutorial-8d4bf.firebasestorage.app",messagingSenderId:"1022368652605",appId:"1:1022368652605:web:9a170b155cfc4fb07bb954"};
 const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app);
-    const appVerifier = new RecaptchaVerifier(auth, 'recaptcha-container');
+    
 const modal=document.getElementById('accountModal'), topBtn=document.getElementById('topLoginBtn');
 const message=document.getElementById('authMessage');
 
