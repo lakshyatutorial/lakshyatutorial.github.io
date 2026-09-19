@@ -642,91 +642,88 @@ footer{
 #ratingBox, #legacyRatingTools { display:none !important; }
 
 </style>
+    
     <style id="auth-animation">
 
-/* ===== LAKSHYA AURA LOGIN UI ===== */
+/* ===== LAKSHYA AURA: AURORA GLOW STYLE ===== */
 
 #accountModal {
     background:
-        radial-gradient(circle at 15% 20%, rgba(79,70,229,.28), transparent 35%),
-        radial-gradient(circle at 85% 80%, rgba(6,182,212,.22), transparent 35%),
-        rgba(5,8,25,.78) !important;
-    backdrop-filter: blur(14px);
+        radial-gradient(circle at 15% 20%, #4f46e5 0%, transparent 32%),
+        radial-gradient(circle at 85% 25%, #06b6d4 0%, transparent 30%),
+        radial-gradient(circle at 50% 100%, #7c3aed 0%, transparent 35%),
+        #080b1d !important;
+    background-size: 180% 180% !important;
+    animation: auroraBackground 10s ease-in-out infinite alternate;
+    backdrop-filter: blur(18px);
 }
 
-/* Main AURA card */
+/* Main card */
 #accountModal > div {
     position: relative;
+    isolation: isolate;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,.25) !important;
-    background:
-        linear-gradient(
-            125deg,
-            rgba(79,70,229,.97) 0%,
-            rgba(67,56,202,.95) 42%,
-            rgba(255,255,255,.98) 42.2%,
-            rgba(255,255,255,.98) 100%
-        ) !important;
+    background: rgba(255,255,255,.96) !important;
+    border: 2px solid transparent !important;
     box-shadow:
-        0 30px 80px rgba(0,0,0,.45),
-        0 0 45px rgba(79,70,229,.25) !important;
-
-    animation: auraCardIn .7s cubic-bezier(.16,1,.3,1);
+        0 25px 90px rgba(0,0,0,.45),
+        0 0 35px rgba(99,102,241,.45) !important;
+    animation: floatingCard 5s ease-in-out infinite,
+               cardEntrance .8s cubic-bezier(.16,1,.3,1);
 }
 
-/* Moving light across the card */
+/* Animated gradient border */
 #accountModal > div::before {
     content: "";
     position: absolute;
-    top: -80%;
-    left: -30%;
-    width: 35%;
-    height: 260%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.28),
-        transparent
+    inset: -3px;
+    z-index: -2;
+    border-radius: 22px;
+    background: conic-gradient(
+        from 0deg,
+        #4f46e5,
+        #06b6d4,
+        #a855f7,
+        #ec4899,
+        #4f46e5
     );
-    transform: rotate(18deg);
-    animation: auraLight 1.4s ease-out .15s both;
-    pointer-events: none;
-    z-index: 0;
+    animation: borderSpin 5s linear infinite;
 }
 
-/* Glow */
+/* Inner surface */
 #accountModal > div::after {
     content: "";
     position: absolute;
-    width: 180px;
-    height: 180px;
-    left: -70px;
-    bottom: -80px;
-    border-radius: 50%;
-    background: rgba(34,211,238,.22);
-    filter: blur(35px);
-    animation: auraGlow 3s ease-in-out infinite alternate;
-    pointer-events: none;
+    inset: 3px;
+    z-index: -1;
+    border-radius: 17px;
+    background: rgba(255,255,255,.97);
 }
 
-/* Keep content above effects */
+/* Keep content visible */
 #accountModal > div > * {
     position: relative;
     z-index: 2;
 }
 
-/* Heading */
+/* Heading animation */
 #accountModal h2 {
-    animation: auraTitle .6s ease-out .2s both;
+    background: linear-gradient(
+        90deg,
+        #4f46e5,
+        #7c3aed,
+        #06b6d4
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: titleGradient 4s linear infinite,
+               contentRise .7s ease-out .15s both;
 }
 
-/* Close button */
-#accountModal button:first-child {
-    transition: transform .2s ease, background .2s ease;
-}
-
-#accountModal button:first-child:active {
-    transform: rotate(90deg) scale(.9);
+/* Description */
+#accountModal h2 + p {
+    animation: contentRise .7s ease-out .25s both;
 }
 
 /* Tabs */
@@ -736,17 +733,18 @@ footer{
         transform .25s ease,
         box-shadow .25s ease,
         background .25s ease;
+    animation: contentRise .7s ease-out .35s both;
 }
 
 #accountLoginTab:active,
 #accountSignupTab:active {
-    transform: scale(.94);
+    transform: scale(.92);
 }
 
-/* Panels */
+/* Form panels */
 #accountLoginPanel,
 #accountSignupPanel {
-    animation: auraPanel .55s cubic-bezier(.16,1,.3,1);
+    animation: panelReveal .65s cubic-bezier(.16,1,.3,1);
 }
 
 /* Inputs */
@@ -768,37 +766,38 @@ footer{
 #registerDOB:focus,
 #registerEmail:focus,
 #registerPassword:focus {
-    transform: translateY(-3px);
-    border-color: rgba(79,70,229,.65) !important;
+    transform: translateY(-4px);
+    border-color: #6366f1 !important;
     box-shadow:
-        0 8px 25px rgba(79,70,229,.15),
-        0 0 0 3px rgba(79,70,229,.10);
+        0 0 0 3px rgba(99,102,241,.15),
+        0 8px 22px rgba(99,102,241,.16);
     outline: none;
 }
 
 /* Buttons */
 #loginBtn,
 #registerBtn {
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease,
-        filter .2s ease;
     position: relative;
     overflow: hidden;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+    box-shadow: 0 8px 20px rgba(79,70,229,.25);
+    animation: buttonEntrance .7s ease-out .45s both;
 }
 
-#loginBtn::after,
-#registerBtn::after {
+#loginBtn::before,
+#registerBtn::before {
     content: "";
     position: absolute;
     top: 0;
-    left: -100%;
-    width: 60%;
+    left: -120%;
+    width: 70%;
     height: 100%;
     background: linear-gradient(
-        90deg,
+        100deg,
         transparent,
-        rgba(255,255,255,.35),
+        rgba(255,255,255,.55),
         transparent
     );
     transform: skewX(-20deg);
@@ -806,109 +805,124 @@ footer{
 
 #loginBtn:active,
 #registerBtn:active {
-    transform: scale(.95);
+    transform: scale(.94);
 }
 
-#loginBtn:active::after,
-#registerBtn:active::after {
-    animation: buttonShine .45s ease;
+#loginBtn:active::before,
+#registerBtn:active::before {
+    animation: buttonSweep .5s ease;
 }
 
 
-/* ===== ANIMATIONS ===== */
+/* ===== KEYFRAMES ===== */
 
-@keyframes auraCardIn {
+@keyframes auroraBackground {
     0% {
-        opacity: 0;
-        transform: translateY(80px) scale(.82) rotateX(8deg);
-        filter: blur(8px);
+        background-position: 0% 20%;
     }
+    50% {
+        background-position: 100% 80%;
+    }
+    100% {
+        background-position: 20% 100%;
+    }
+}
 
-    55% {
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(100px) scale(.75) rotate(-4deg);
+        filter: blur(12px);
+    }
+    to {
         opacity: 1;
-        transform: translateY(-8px) scale(1.02) rotateX(0);
+        transform: translateY(0) scale(1) rotate(0);
         filter: blur(0);
     }
+}
 
-    100% {
-        transform: translateY(0) scale(1);
+@keyframes floatingCard {
+    0%, 100% {
+        translate: 0 0;
+    }
+    50% {
+        translate: 0 -7px;
     }
 }
 
-@keyframes auraLight {
-    from {
-        left: -45%;
-        opacity: 0;
-    }
-
-    20% {
-        opacity: 1;
-    }
-
+@keyframes borderSpin {
     to {
-        left: 125%;
-        opacity: 0;
+        transform: rotate(360deg);
     }
 }
 
-@keyframes auraGlow {
-    from {
-        transform: scale(.9);
-        opacity: .5;
-    }
-
+@keyframes titleGradient {
     to {
-        transform: scale(1.25);
-        opacity: .9;
+        background-position: 200% center;
     }
 }
 
-@keyframes auraTitle {
+@keyframes contentRise {
     from {
         opacity: 0;
-        transform: translateY(-25px) scale(.95);
+        transform: translateY(25px);
     }
-
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
-@keyframes auraPanel {
+@keyframes panelReveal {
     from {
         opacity: 0;
-        transform: translateX(45px) scale(.97);
+        transform: translateX(35px) scale(.97);
     }
-
     to {
         opacity: 1;
         transform: translateX(0) scale(1);
     }
 }
 
-@keyframes buttonShine {
+@keyframes buttonEntrance {
     from {
-        left: -100%;
+        opacity: 0;
+        transform: translateY(20px) scale(.9);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
 
+@keyframes buttonSweep {
+    from {
+        left: -120%;
+    }
     to {
         left: 150%;
     }
 }
 
-/* Mobile */
+/* Mobile adjustment */
 @media (max-width: 600px) {
+    #accountModal {
+        padding: 12px !important;
+    }
+
     #accountModal > div {
-        margin: 20px !important;
-        background:
-            linear-gradient(
-                145deg,
-                rgba(79,70,229,.97) 0%,
-                rgba(67,56,202,.95) 34%,
-                rgba(255,255,255,.98) 34.2%,
-                rgba(255,255,255,.98) 100%
-            ) !important;
+        margin: 5vh auto !important;
+        width: 100% !important;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    #accountModal,
+    #accountModal > div,
+    #accountModal > div::before,
+    #accountModal h2 {
+        animation: none !important;
     }
 }
 
