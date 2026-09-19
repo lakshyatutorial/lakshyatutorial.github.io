@@ -1166,7 +1166,34 @@ const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app)
 const modal=document.getElementById('accountModal'), topBtn=document.getElementById('topLoginBtn');
 const message=document.getElementById('authMessage');
 
-function showPanel(mode){
+function showPanel(mode) {
+    const loginPanel = document.getElementById("accountLoginPanel");
+    const signupPanel = document.getElementById("accountSignupPanel");
+    const loginTab = document.getElementById("accountLoginTab");
+    const signupTab = document.getElementById("accountSignupTab");
+
+    if (mode === "login") {
+        loginPanel.style.display = "block";
+        signupPanel.style.display = "none";
+
+        loginTab.classList.add("active");
+        signupTab.classList.remove("active");
+
+        loginPanel.style.animation = "none";
+        void loginPanel.offsetWidth;
+        loginPanel.style.animation = "auraPanel .55s cubic-bezier(.16,1,.3,1)";
+    } else {
+        loginPanel.style.display = "none";
+        signupPanel.style.display = "block";
+
+        loginTab.classList.remove("active");
+        signupTab.classList.add("active");
+
+        signupPanel.style.animation = "none";
+        void signupPanel.offsetWidth;
+        signupPanel.style.animation = "auraPanel .55s cubic-bezier(.16,1,.3,1)";
+    }
+}
   const login=mode==='login';
   document.getElementById('accountLoginPanel').style.display=login?'block':'none';
   document.getElementById('accountSignupPanel').style.display=login?'none':'block';
