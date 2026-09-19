@@ -642,109 +642,94 @@ footer{
 #ratingBox, #legacyRatingTools { display:none !important; }
 
 </style>
-    
     <style id="auth-animation">
 
-/* ===== LAKSHYA AURA: AURORA GLOW STYLE ===== */
+/* ===== LAKSHYA CHARACTER LOGIN ===== */
 
 #accountModal {
     background:
-        radial-gradient(circle at 15% 20%, #4f46e5 0%, transparent 32%),
-        radial-gradient(circle at 85% 25%, #06b6d4 0%, transparent 30%),
-        radial-gradient(circle at 50% 100%, #7c3aed 0%, transparent 35%),
-        #080b1d !important;
-    background-size: 180% 180% !important;
-    animation: auroraBackground 10s ease-in-out infinite alternate;
-    backdrop-filter: blur(18px);
+        radial-gradient(circle at 20% 30%, rgba(79,70,229,.35), transparent 35%),
+        radial-gradient(circle at 80% 70%, rgba(6,182,212,.25), transparent 35%),
+        rgba(5,8,25,.82) !important;
+    backdrop-filter: blur(14px);
 }
 
-/* Main card */
-#accountModal > div {
+/* CHARACTER STAGE */
+#auraCharacter {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 180px;
+    height: 260px;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    pointer-events: none;
+    animation:
+        characterEnter .9s cubic-bezier(.16,1,.3,1) forwards,
+        characterExit .7s ease-in 1.05s forwards;
+}
+
+/* Character */
+.auraPerson {
+    width: 180px;
+    height: 260px;
+    display: block;
+    filter:
+        drop-shadow(0 15px 20px rgba(0,0,0,.3));
+    animation: characterFloat .8s ease-in-out .2s infinite alternate;
+}
+
+/* Glow underneath */
+.auraCharacterGlow {
+    position: absolute;
+    width: 150px;
+    height: 35px;
+    left: 15px;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(99,102,241,.55);
+    filter: blur(20px);
+    animation: characterGlow .8s ease-in-out infinite alternate;
+}
+
+/* LOGIN CARD */
+
+#accountModal > div:not(#auraCharacter) {
     position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    background: rgba(255,255,255,.96) !important;
-    border: 2px solid transparent !important;
+    z-index: 10;
+
+    animation:
+        loginCardWait .05s linear,
+        loginCardEnter .7s cubic-bezier(.16,1,.3,1) 1.45s both;
+
     box-shadow:
-        0 25px 90px rgba(0,0,0,.45),
-        0 0 35px rgba(99,102,241,.45) !important;
-    animation: floatingCard 5s ease-in-out infinite,
-               cardEntrance .8s cubic-bezier(.16,1,.3,1);
+        0 25px 80px rgba(0,0,0,.4),
+        0 0 35px rgba(79,70,229,.3) !important;
 }
 
-/* Animated gradient border */
-#accountModal > div::before {
+/* Slight glow around card */
+#accountModal > div:not(#auraCharacter)::before {
     content: "";
     position: absolute;
-    inset: -3px;
-    z-index: -2;
-    border-radius: 22px;
-    background: conic-gradient(
-        from 0deg,
+    inset: -2px;
+    border-radius: 20px;
+    background: linear-gradient(
+        120deg,
         #4f46e5,
         #06b6d4,
-        #a855f7,
-        #ec4899,
+        #7c3aed,
         #4f46e5
     );
-    animation: borderSpin 5s linear infinite;
-}
-
-/* Inner surface */
-#accountModal > div::after {
-    content: "";
-    position: absolute;
-    inset: 3px;
+    background-size: 300% 300%;
     z-index: -1;
-    border-radius: 17px;
-    background: rgba(255,255,255,.97);
+    opacity: .7;
+    animation: cardGlow 5s ease infinite;
 }
 
-/* Keep content visible */
-#accountModal > div > * {
-    position: relative;
-    z-index: 2;
-}
-
-/* Heading animation */
-#accountModal h2 {
-    background: linear-gradient(
-        90deg,
-        #4f46e5,
-        #7c3aed,
-        #06b6d4
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    color: transparent;
-    animation: titleGradient 4s linear infinite,
-               contentRise .7s ease-out .15s both;
-}
-
-/* Description */
-#accountModal h2 + p {
-    animation: contentRise .7s ease-out .25s both;
-}
-
-/* Tabs */
-#accountLoginTab,
-#accountSignupTab {
-    transition:
-        transform .25s ease,
-        box-shadow .25s ease,
-        background .25s ease;
-    animation: contentRise .7s ease-out .35s both;
-}
-
-#accountLoginTab:active,
-#accountSignupTab:active {
-    transform: scale(.92);
-}
-
-/* Form panels */
+/* Form appears after card */
 #accountLoginPanel,
 #accountSignupPanel {
-    animation: panelReveal .65s cubic-bezier(.16,1,.3,1);
+    animation: formEnter .55s ease-out 1.9s both;
 }
 
 /* Inputs */
@@ -755,9 +740,9 @@ footer{
 #registerEmail,
 #registerPassword {
     transition:
-        transform .25s ease,
-        box-shadow .25s ease,
-        border-color .25s ease;
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
 }
 
 #loginEmail:focus,
@@ -766,167 +751,140 @@ footer{
 #registerDOB:focus,
 #registerEmail:focus,
 #registerPassword:focus {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     border-color: #6366f1 !important;
-    box-shadow:
-        0 0 0 3px rgba(99,102,241,.15),
-        0 8px 22px rgba(99,102,241,.16);
+    box-shadow: 0 0 0 3px rgba(99,102,241,.13);
     outline: none;
 }
 
 /* Buttons */
 #loginBtn,
 #registerBtn {
-    position: relative;
-    overflow: hidden;
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease;
-    box-shadow: 0 8px 20px rgba(79,70,229,.25);
-    animation: buttonEntrance .7s ease-out .45s both;
-}
-
-#loginBtn::before,
-#registerBtn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -120%;
-    width: 70%;
-    height: 100%;
-    background: linear-gradient(
-        100deg,
-        transparent,
-        rgba(255,255,255,.55),
-        transparent
-    );
-    transform: skewX(-20deg);
+    transition: transform .2s ease, box-shadow .2s ease;
 }
 
 #loginBtn:active,
 #registerBtn:active {
-    transform: scale(.94);
+    transform: scale(.95);
 }
 
-#loginBtn:active::before,
-#registerBtn:active::before {
-    animation: buttonSweep .5s ease;
-}
+/* ===== ANIMATIONS ===== */
 
-
-/* ===== KEYFRAMES ===== */
-
-@keyframes auroraBackground {
+@keyframes characterEnter {
     0% {
-        background-position: 0% 20%;
+        opacity: 0;
+        transform: translate(-50%, 180px) scale(.65);
     }
-    50% {
-        background-position: 100% 80%;
+
+    60% {
+        opacity: 1;
+        transform: translate(-50%, -55%) scale(1.05);
     }
+
     100% {
-        background-position: 20% 100%;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
     }
 }
 
-@keyframes cardEntrance {
+@keyframes characterExit {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-20%, -50%) scale(.8);
+    }
+}
+
+@keyframes characterFloat {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-6px);
+    }
+}
+
+@keyframes characterGlow {
+    from {
+        transform: scale(.85);
+        opacity: .4;
+    }
+
+    to {
+        transform: scale(1.1);
+        opacity: .8;
+    }
+}
+
+@keyframes loginCardWait {
     from {
         opacity: 0;
-        transform: translateY(100px) scale(.75) rotate(-4deg);
-        filter: blur(12px);
     }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes loginCardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(35px) scale(.9);
+        filter: blur(8px);
+    }
+
     to {
         opacity: 1;
-        transform: translateY(0) scale(1) rotate(0);
+        transform: translateY(0) scale(1);
         filter: blur(0);
     }
 }
 
-@keyframes floatingCard {
-    0%, 100% {
-        translate: 0 0;
-    }
-    50% {
-        translate: 0 -7px;
-    }
-}
-
-@keyframes borderSpin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes titleGradient {
-    to {
-        background-position: 200% center;
-    }
-}
-
-@keyframes contentRise {
+@keyframes formEnter {
     from {
         opacity: 0;
-        transform: translateY(25px);
+        transform: translateY(18px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-@keyframes panelReveal {
-    from {
-        opacity: 0;
-        transform: translateX(35px) scale(.97);
+@keyframes cardGlow {
+    0% {
+        background-position: 0% 50%;
     }
-    to {
-        opacity: 1;
-        transform: translateX(0) scale(1);
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
     }
 }
 
-@keyframes buttonEntrance {
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(.9);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
+/* Mobile */
+@media (max-width:600px) {
 
-@keyframes buttonSweep {
-    from {
-        left: -120%;
-    }
-    to {
-        left: 150%;
-    }
-}
-
-/* Mobile adjustment */
-@media (max-width: 600px) {
-    #accountModal {
-        padding: 12px !important;
+    #auraCharacter {
+        transform: translate(-50%, -50%) scale(.82);
     }
 
-    #accountModal > div {
-        margin: 5vh auto !important;
-        width: 100% !important;
-    }
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-    #accountModal,
-    #accountModal > div,
-    #accountModal > div::before,
-    #accountModal h2 {
-        animation: none !important;
+    #accountModal > div:not(#auraCharacter) {
+        margin: 7vh auto !important;
     }
 }
 
     </style>
+
         
 <style id="lt-clean-ui">
 .lt-legacy-control{display:none!important}
@@ -1066,6 +1024,71 @@ async function ensureStudentId(uid){
 </header>
 
 <div id="accountModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;padding:18px;overflow:auto;">
+    <div id="auraCharacter" aria-hidden="true">
+  <div class="auraCharacterGlow"></div>
+
+  <svg viewBox="0 0 180 260" class="auraPerson">
+    <!-- head -->
+    <circle cx="90" cy="55" r="32" fill="#f2c7a5"/>
+
+    <!-- hair -->
+    <path d="M58 52 Q60 18 92 20 Q124 20 124 54 Q112 39 96 40 Q76 42 58 52Z"
+          fill="#172033"/>
+
+    <!-- face -->
+    <circle cx="78" cy="57" r="3" fill="#172033"/>
+    <circle cx="101" cy="57" r="3" fill="#172033"/>
+    <path d="M82 72 Q90 78 99 72"
+          fill="none"
+          stroke="#172033"
+          stroke-width="3"
+          stroke-linecap="round"/>
+
+    <!-- body -->
+    <path d="M55 103 Q90 88 125 103 L140 190 Q90 210 40 190Z"
+          fill="#4f46e5"/>
+
+    <!-- shirt detail -->
+    <path d="M70 103 L90 125 L110 103"
+          fill="none"
+          stroke="#ffffff"
+          stroke-width="5"/>
+
+    <!-- left arm -->
+    <path d="M53 112 Q30 125 25 160"
+          fill="none"
+          stroke="#4f46e5"
+          stroke-width="18"
+          stroke-linecap="round"/>
+
+    <!-- right arm -->
+    <path d="M126 112 Q151 126 157 151"
+          fill="none"
+          stroke="#4f46e5"
+          stroke-width="18"
+          stroke-linecap="round"/>
+
+    <!-- hands -->
+    <circle cx="25" cy="160" r="9" fill="#f2c7a5"/>
+    <circle cx="157" cy="151" r="9" fill="#f2c7a5"/>
+
+    <!-- legs -->
+    <path d="M68 188 L62 240"
+          stroke="#172033"
+          stroke-width="17"
+          stroke-linecap="round"/>
+    <path d="M112 188 L120 240"
+          stroke="#172033"
+          stroke-width="17"
+          stroke-linecap="round"/>
+
+    <!-- shoes -->
+    <path d="M52 242 Q64 235 77 243 L77 251 L48 251Z"
+          fill="#111827"/>
+    <path d="M111 243 Q124 236 137 244 L137 251 L108 251Z"
+          fill="#111827"/>
+  </svg>
+    </div>
   <div style="max-width:460px;margin:7vh auto;background:#fff;border-radius:18px;padding:24px;box-shadow:0 18px 60px rgba(0,0,0,.2);position:relative;">
     <button id="accountClose" type="button" aria-label="Close" style="position:absolute;right:14px;top:10px;border:none;background:transparent;font-size:28px;cursor:pointer;">×</button>
     <div style="text-align:center;padding-right:25px;">
