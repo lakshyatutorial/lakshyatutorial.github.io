@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Class | Lakshya Tutorial</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
+header{background:#fff;border-bottom:1px solid #e5e7eb;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+.brand{font-size:21px;font-weight:700}.back{color:#2563eb;text-decoration:none;font-weight:600}
+main{max-width:1000px;margin:auto;padding:24px 16px}.hero{background:linear-gradient(135deg,#1d4ed8,#2563eb);color:white;border-radius:20px;padding:26px;margin-bottom:20px}
+.hero h1{margin:0 0 8px;font-size:28px}.hero p{margin:0;opacity:.9}.panel{background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:20px;margin-bottom:18px}
+label{display:block;font-weight:700;margin-bottom:8px}select{width:100%;padding:13px;border:1px solid #d1d5db;border-radius:10px;font-size:16px;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:18px;text-decoration:none;color:inherit;display:block}
+.icon{font-size:28px;margin-bottom:10px}.card h3{margin:0 0 6px;font-size:17px}.card p{margin:0;color:#667085;font-size:14px;line-height:1.4}
+.msg{padding:14px;border-radius:10px;background:#eef2ff;color:#3730a3;margin-top:12px}@media(max-width:600px){.hero h1{font-size:24px}.brand{font-size:18px}}
+</style>
+</head>
+<body>
+<header><div class="brand">Lakshya Tutorial</div><a class="back" href="index.html">Home</a></header>
+<main>
+<section class="hero"><h1 id="title">My Class</h1><p>Your class-wise learning area.</p></section>
+<section class="panel">
+<label for="classSelect">Choose your class</label>
+<select id="classSelect">
+<option value="">Select Class</option>
+<option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option><option>Class 6</option><option>Class 7</option><option>Class 8</option><option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option>
+</select>
+<div id="msg" class="msg">Select your class to personalize this page.</div>
+</section>
+<section class="grid">
+<a class="card" href="study-materials.html"><div class="icon">📚</div><h3>Study Materials</h3><p>Open materials and resources.</p></a>
+<a class="card" href="tests.html"><div class="icon">📝</div><h3>Tests & Quizzes</h3><p>Practice tests and check results.</p></a>
+<a class="card" href="announcements.html"><div class="icon">📢</div><h3>Announcements</h3><p>See important teacher messages.</p></a>
+<a class="card" href="progress.html"><div class="icon">📊</div><h3>My Progress</h3><p>Review your learning performance.</p></a>
+<a class="card" href="notifications.html"><div class="icon">🔔</div><h3>Notifications</h3><p>See your latest updates.</p></a>
+<a class="card" href="student-dashboard.html"><div class="icon">🎓</div><h3>Student Dashboard</h3><p>Return to your student area.</p></a>
+</section>
+</main>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyBZYc90TM1p9eXE56K6V-q1EZrpF_E1aD8",authDomain:"lakshya-tutorial-8d4bf.firebaseapp.com",projectId:"lakshya-tutorial-8d4bf",storageBucket:"lakshya-tutorial-8d4bf.firebasestorage.app",messagingSenderId:"1022368652605",appId:"1:1022368652605:web:9a170b155cfc4fb07bb954"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const select=document.getElementById("classSelect"),title=document.getElementById("title"),msg=document.getElementById("msg");
+function applyClass(value){if(!value)return;localStorage.setItem("ltSelectedClass",value);title.textContent=value+" Learning";msg.textContent="Your selected class is saved: "+value;}
+select.value=localStorage.getItem("ltSelectedClass")||"";if(select.value)applyClass(select.value);
+select.addEventListener("change",async()=>{applyClass(select.value);const user=auth.currentUser;if(user&&select.value){try{await setDoc(doc(db,"students",user.uid),{class:select.value},{merge:true});}catch(e){}}});
+onAuthStateChanged(auth,async user=>{if(!user)return;try{const snap=await getDoc(doc(db,"students",user.uid));if(snap.exists()&&snap.data().class){select.value=snap.data().class;applyClass(select.value);}}catch(e){}});
+</script>
+</body>
+</html>
