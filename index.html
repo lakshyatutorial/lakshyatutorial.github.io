@@ -1194,15 +1194,7 @@ function showPanel(mode) {
         signupPanel.style.animation = "auraPanel .55s cubic-bezier(.16,1,.3,1)";
     }
 }
-  const login=mode==='login';
-  document.getElementById('accountLoginPanel').style.display=login?'block':'none';
-  document.getElementById('accountSignupPanel').style.display=login?'none':'block';
-  document.getElementById('accountLoginTab').style.background=login?'#111':'#fff';
-  document.getElementById('accountLoginTab').style.color=login?'#fff':'#111';
-  document.getElementById('accountSignupTab').style.background=login?'#fff':'#111';
-  document.getElementById('accountSignupTab').style.color=login?'#111':'#fff';
-  message.textContent='';
-}
+  
 function openModal(mode='login'){modal.style.display='block';document.body.style.overflow='hidden';showPanel(mode);}
 function closeModal(){modal.style.display='none';document.body.style.overflow='';message.textContent='';}
 document.getElementById('accountClose').addEventListener('click',closeModal);
