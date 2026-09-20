@@ -1081,7 +1081,35 @@ function showPanel(mode) {
     }
 }
   
-function openModal(mode='login'){modal.style.display='block';document.body.style.overflow='hidden';showPanel(mode);}
+function openModal(mode='login') {
+    modal.style.display = 'block';
+
+    const character = document.getElementById('loginCharacter');
+
+    if (character) {
+        character.style.animation = 'none';
+
+        void character.offsetWidth;
+
+        character.style.animation =
+            'characterMoonwalk 2.15s cubic-bezier(.16,1,.3,1) forwards';
+    }
+
+    const card = document.querySelector(
+        '#accountModal > div:not(#loginCharacterScene)'
+    );
+
+    if (card) {
+        card.style.animation = 'none';
+
+        void card.offsetWidth;
+
+        card.style.animation =
+            'loginCardOpen .75s cubic-bezier(.16,1,.3,1) 2.05s forwards';
+    }
+
+    showPanel(mode);
+}
 function closeModal(){modal.style.display='none';document.body.style.overflow='';message.textContent='';}
 document.getElementById('accountClose').addEventListener('click',closeModal);
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
