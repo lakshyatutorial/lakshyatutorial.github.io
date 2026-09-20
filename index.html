@@ -744,7 +744,50 @@ footer{
 #loginCharacter {
     z-index: 20;
         }
+/* ===== MOVING STAGE LIGHTS ===== */
 
+#loginCharacterScene::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            ellipse at 18% 5%,
+            rgba(90,130,255,.42) 0%,
+            transparent 22%
+        ),
+        radial-gradient(
+            ellipse at 82% 5%,
+            rgba(100,120,255,.38) 0%,
+            transparent 22%
+        ),
+        radial-gradient(
+            ellipse at 50% 0%,
+            rgba(80,110,255,.25) 0%,
+            transparent 25%
+        );
+
+    animation: stageLights 4s ease-in-out infinite alternate;
+}
+
+@keyframes stageLights {
+    0% {
+        transform: translateX(-3%) scale(1);
+        opacity: .65;
+    }
+
+    50% {
+        transform: translateX(3%) scale(1.04);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(-1%) scale(1.02);
+        opacity: .75;
+    }
+        }
     </style>
 
         
