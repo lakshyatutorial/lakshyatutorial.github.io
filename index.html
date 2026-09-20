@@ -742,6 +742,83 @@ footer{
 
 /* Keep character above the stage */
 #loginCharacter {
+    position: absolute;
+    z-index: 20;
+
+    width: min(390px, 58vw);
+    max-height: 82vh;
+    object-fit: contain;
+
+    left: 50%;
+    top: 50%;
+
+    opacity: 0;
+
+    transform:
+        translate(-50%, -50%)
+        translateX(-120vw)
+        scale(.82);
+
+    filter:
+        drop-shadow(0 25px 30px rgba(0,0,0,.5));
+
+    animation:
+        characterEntrance
+        3s
+        cubic-bezier(.16,1,.3,1)
+        forwards;
+}
+
+@keyframes characterEntrance {
+
+    0% {
+        opacity: 0;
+        transform:
+            translate(-50%, -50%)
+            translateX(-120vw)
+            scale(.82);
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    35% {
+        transform:
+            translate(-50%, -50%)
+            translateX(-35vw)
+            scale(.90);
+    }
+
+    55% {
+        transform:
+            translate(-50%, -50%)
+            translateX(0)
+            scale(1);
+    }
+
+    68% {
+        transform:
+            translate(-50%, -50%)
+            translateX(10vw)
+            scale(1);
+    }
+
+    82% {
+        transform:
+            translate(-50%, -50%)
+            translateX(25vw)
+            scale(.95);
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+            translate(-50%, -50%)
+            translateX(70vw)
+            scale(.85);
+    }
+        }
     z-index: 20;
         }
 /* ===== MOVING STAGE LIGHTS ===== */
