@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Profile | Lakshya Tutorial</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
+header{background:#fff;border-bottom:1px solid #e5e9f2;padding:16px 18px;position:sticky;top:0;z-index:5}
+.wrap{max-width:850px;margin:auto}
+.brand{font-size:22px;font-weight:800}
+.back{display:inline-block;margin-top:8px;text-decoration:none;color:#3157d5;font-weight:700}
+main{padding:25px 16px}
+.card{background:#fff;border:1px solid #e5e9f2;border-radius:18px;padding:22px;margin-bottom:16px;box-shadow:0 3px 14px rgba(20,30,50,.05)}
+.profile-head{display:flex;align-items:center;gap:18px}
+.avatar{width:82px;height:82px;border-radius:50%;background:#e9eefc;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;overflow:hidden;flex:none}
+.avatar img{width:100%;height:100%;object-fit:cover}
+h1{font-size:25px;margin:0 0 5px}
+.sub{color:#687386}
+.status{display:inline-block;margin-top:10px;padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700}
+.locked{background:#e8f7ee;color:#176b3a}
+.open{background:#fff4d6;color:#8a5a00}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{margin-bottom:14px}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:#465166}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d8deea;border-radius:10px;font:inherit;background:#fff}
+textarea{min-height:90px;resize:vertical}
+input:disabled,select:disabled,textarea:disabled{background:#f5f6f8;color:#687386}
+button{border:0;border-radius:10px;padding:12px 17px;font-weight:700;cursor:pointer}
+.primary{background:#3157d5;color:#fff}
+.secondary{background:#eef2f7;color:#263247}
+.notice{padding:14px;border-radius:12px;background:#f3f6ff;color:#334a92;line-height:1.5}
+.error{background:#fff0f0;color:#a42626}
+.success{background:#eaf8ef;color:#176b3a}
+.hidden{display:none}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.profile-head{align-items:flex-start}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">Lakshya Tutorial</div>
+    <a class="back" href="index.html">← Home</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="message" class="notice">Checking your account...</div>
+
+  <section id="profileCard" class="card hidden">
+    <div class="profile-head">
+      <div id="avatar" class="avatar">LT</div>
+      <div>
+        <h1 id="displayName">Student Profile</h1>
+        <div class="sub">Your Lakshya Tutorial student account</div>
+        <span id="status" class="status open">Profile not completed</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="formCard" class="card hidden">
+    <h2 id="formTitle">Complete Your Profile</h2>
+    <p class="sub">Please check your information carefully before saving.</p>
+
+    <div class="grid">
+      <div class="field">
+        <label>Student ID</label>
+        <input id="studentId" disabled>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input id="email" type="email" disabled>
+      </div>
+      <div class="field">
+        <label>Full Name</label>
+        <input id="name" type="text" placeholder="Enter your full name">
+      </div>
+      <div class="field">
+        <label>Date of Birth</label>
+        <input id="dob" type="date">
+      </div>
+      <div class="field">
+        <label>Class</label>
+        <select id="classLevel">
+          <option value="">Select class</option>
+          <option value="1">Class 1</option><option value="2">Class 2</option>
+          <option value="3">Class 3</option><option value="4">Class 4</option>
+          <option value="5">Class 5</option><option value="6">Class 6</option>
+          <option value="7">Class 7</option><option value="8">Class 8</option>
+          <option value="9">Class 9</option><option value="10">Class 10</option>
+          <option value="11">Class 11</option><option value="12">Class 12</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Photo URL (optional)</label>
+        <input id="photoUrl" type="url" placeholder="https://...">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Address (optional)</label>
+      <textarea id="address" placeholder="Enter your address"></textarea>
+    </div>
+
+    <div id="saveNotice" class="notice">
+      After you save, your student profile will be locked. If you later find a mistake, contact your teacher.
+    </div>
+
+    <br>
+    <button id="saveBtn" class="primary">Save & Lock Profile</button>
+  </section>
+
+  <section id="lockedCard" class="card hidden">
+    <h2>🔒 Profile Locked</h2>
+    <div class="notice">
+      Your profile has been saved and locked. You can view your information, but you cannot edit it yourself.
+      <br><br>
+      Need a correction? <strong>Contact your teacher.</strong>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyBZYc90TM1p9eXE56K6V-q1EZrpF_E1aD8",
+  authDomain:"lakshya-tutorial-8d4bf.firebaseapp.com",
+  projectId:"lakshya-tutorial-8d4bf",
+  storageBucket:"lakshya-tutorial-8d4bf.firebasestorage.app",
+  messagingSenderId:"1022368652605",
+  appId:"1:1022368652605:web:9a170b155cfc4fb07bb954"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+const $=id=>document.getElementById(id);
+
+function setMessage(text,type="notice"){
+  const m=$("message");
+  m.textContent=text;
+  m.className="notice "+(type==="error"?"error":type==="success"?"success":"");
+}
+
+function fill(data,user){
+  $("studentId").value=data.studentId||"Not assigned";
+  $("email").value=data.email||user.email||"";
+  $("name").value=data.name||"";
+  $("dob").value=data.dob||"";
+  $("classLevel").value=String(data.classLevel||data.class||"");
+  $("address").value=data.address||"";
+  $("photoUrl").value=data.photoUrl||"";
+  $("displayName").textContent=data.name||"Student Profile";
+
+  if(data.photoUrl){
+    $("avatar").innerHTML='<img src="'+String(data.photoUrl).replace(/"/g,"&quot;")+'" alt="Profile photo">';
+  }else{
+    const initials=(data.name||"LT").split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
+    $("avatar").textContent=initials||"LT";
+  }
+}
+
+function setLocked(locked){
+  ["name","dob","classLevel","address","photoUrl"].forEach(id=>$(id).disabled=locked);
+  $("saveBtn").classList.toggle("hidden",locked);
+  $("status").textContent=locked?"🔒 Profile Locked":"Profile not completed";
+  $("status").className="status "+(locked?"locked":"open");
+  $("lockedCard").classList.toggle("hidden",!locked);
+  $("formTitle").textContent=locked?"Your Profile":"Complete Your Profile";
+  if(locked) $("saveNotice").textContent="Your profile is locked. Contact your teacher if a correction is needed.";
+}
+
+onAuthStateChanged(auth,async user=>{
+  if(!user){
+    $("profileCard").classList.add("hidden");
+    $("formCard").classList.add("hidden");
+    $("lockedCard").classList.add("hidden");
+    setMessage("Please log in first to open your student profile.","error");
+    return;
+  }
+
+  try{
+    const ref=doc(db,"students",user.uid);
+    const snap=await getDoc(ref);
+
+    let data=snap.exists()?snap.data():{
+      name:user.displayName||"",
+      dob:"",
+      email:user.email||"",
+      studentId:"",
+      profileLocked:false
+    };
+
+    if(!snap.exists()){
+      await setDoc(ref,data,{merge:true});
+    }
+
+    fill(data,user);
+    $("profileCard").classList.remove("hidden");
+    $("formCard").classList.remove("hidden");
+
+    const locked=data.profileLocked===true;
+    setLocked(locked);
+    setMessage(locked?"Your profile is loaded successfully.":"Complete your profile and save it once.","success");
+  }catch(e){
+    setMessage("Could not load your profile: "+(e.message||e),"error");
+  }
+});
+
+$("saveBtn").addEventListener("click",async()=>{
+  const user=auth.currentUser;
+  if(!user)return;
+
+  const name=$("name").value.trim();
+  const dob=$("dob").value;
+  const classLevel=$("classLevel").value;
+  const address=$("address").value.trim();
+  const photoUrl=$("photoUrl").value.trim();
+
+  if(!name||!dob||!classLevel){
+    setMessage("Please enter your name, date of birth and class.","error");
+    return;
+  }
+
+  $("saveBtn").disabled=true;
+  $("saveBtn").textContent="Saving...";
+
+  try{
+    const ref=doc(db,"students",user.uid);
+    const snap=await getDoc(ref);
+    const old=snap.exists()?snap.data():{};
+
+    if(old.profileLocked===true){
+      setMessage("Your profile is already locked. Contact your teacher for corrections.","error");
+      setLocked(true);
+      return;
+    }
+
+    await setDoc(ref,{
+      name,
+      dob,
+      classLevel:Number(classLevel),
+      address,
+      photoUrl,
+      email:user.email||old.email||"",
+      studentId:old.studentId||"",
+      profileLocked:true,
+      profileLockedAt:new Date().toISOString()
+    },{merge:true});
+
+    const updated=await getDoc(ref);
+    fill(updated.data()||{},user);
+    setLocked(true);
+    setMessage("Profile saved successfully and locked.","success");
+  }catch(e){
+    setMessage("Could not save profile: "+(e.message||e),"error");
+  }finally{
+    $("saveBtn").disabled=false;
+    $("saveBtn").textContent="Save & Lock Profile";
+  }
+});
+</script>
+</body>
+</html>
