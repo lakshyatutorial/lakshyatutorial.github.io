@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lakshya Tutorial | Smart Study Planner</title>
+
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f7fb;
+    color:#172033;
+  }
+  header{
+    background:#102a56;
+    color:white;
+    padding:18px 16px;
+    position:sticky;
+    top:0;
+    z-index:10;
+  }
+  .top{
+    max-width:1000px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+  }
+  .brand{font-size:21px;font-weight:700}
+  .back{
+    color:white;
+    text-decoration:none;
+    border:1px solid rgba(255,255,255,.35);
+    padding:8px 12px;
+    border-radius:10px;
+    font-size:14px;
+  }
+  main{
+    max-width:1000px;
+    margin:20px auto;
+    padding:0 14px 40px;
+  }
+  .hero{
+    background:linear-gradient(135deg,#102a56,#1f4f9a);
+    color:white;
+    border-radius:18px;
+    padding:22px;
+    margin-bottom:16px;
+  }
+  .hero h1{margin:0 0 6px;font-size:27px}
+  .hero p{margin:0;opacity:.9}
+  .card{
+    background:white;
+    border-radius:16px;
+    padding:18px;
+    margin-bottom:16px;
+    box-shadow:0 6px 22px rgba(16,42,86,.08);
+  }
+  h2{font-size:19px;margin:0 0 14px}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+  label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  input,select{
+    width:100%;
+    padding:12px;
+    border:1px solid #d8deea;
+    border-radius:10px;
+    font-size:15px;
+    background:white;
+  }
+  button{
+    border:0;
+    border-radius:10px;
+    padding:11px 14px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .primary{background:#1457d9;color:white}
+  .secondary{background:#edf2fb;color:#18345f}
+  .danger{background:#ffe9e9;color:#b42318}
+  .task{
+    border:1px solid #e0e5ee;
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:10px;
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .task.done{
+    background:#f1fbf4;
+    border-color:#b9e2c3;
+  }
+  .check{
+    width:22px;
+    height:22px;
+    margin-top:2px;
+    accent-color:#1457d9;
+  }
+  .task-main{flex:1}
+  .task-title{font-weight:700;margin-bottom:5px}
+  .task-meta{font-size:13px;color:#657086;line-height:1.5}
+  .task.done .task-title{text-decoration:line-through;color:#5d7563}
+  .task-actions{display:flex;gap:6px;flex-wrap:wrap}
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+  }
+  .stat{
+    background:#f7f9fd;
+    border-radius:12px;
+    padding:14px;
+    text-align:center;
+  }
+  .stat strong{display:block;font-size:25px;color:#1457d9}
+  .stat span{font-size:12px;color:#68758b}
+  .progress-wrap{
+    height:12px;
+    background:#e9edf4;
+    border-radius:20px;
+    overflow:hidden;
+    margin:10px 0 4px;
+  }
+  .progress-bar{
+    height:100%;
+    width:0%;
+    background:#1457d9;
+    transition:width .25s;
+  }
+  .empty{
+    text-align:center;
+    color:#69758a;
+    padding:20px 5px;
+  }
+  .message{
+    margin-top:10px;
+    font-size:14px;
+    color:#31517f;
+  }
+  .small{font-size:12px;color:#69758a}
+  @media(max-width:650px){
+    .grid{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr 1fr}
+    .task{flex-wrap:wrap}
+    .task-actions{width:100%}
+  }
+</style>
+</head>
+
+<body>
+<header>
+  <div class="top">
+    <div class="brand">Lakshya Tutorial</div>
+    <a class="back" href="student-dashboard.html">← Dashboard</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Smart Study Planner</h1>
+    <p id="helloText">Plan your study, complete your tasks, and build your streak.</p>
+  </section>
+
+  <section class="card">
+    <h2>Add Study Task</h2>
+    <div class="grid">
+      <div>
+        <label for="taskDate">Date</label>
+        <input id="taskDate" type="date">
+      </div>
+      <div>
+        <label for="taskSubject">Subject</label>
+        <input id="taskSubject" type="text" placeholder="e.g. Biology">
+      </div>
+      <div>
+        <label for="taskTitle">Task / Chapter</label>
+        <input id="taskTitle" type="text" placeholder="e.g. Cell: The Unit of Life">
+      </div>
+      <div>
+        <label for="taskDuration">Study duration (minutes)</label>
+        <input id="taskDuration" type="number" min="5" step="5" value="30">
+      </div>
+    </div>
+    <br>
+    <button class="primary" id="addTaskBtn">+ Add Task</button>
+    <div class="message" id="message"></div>
+  </section>
+
+  <section class="card">
+    <h2>Today's Progress</h2>
+    <div class="stats">
+      <div class="stat"><strong id="totalToday">0</strong><span>Tasks</span></div>
+      <div class="stat"><strong id="doneToday">0</strong><span>Completed</span></div>
+      <div class="stat"><strong id="minutesToday">0</strong><span>Minutes</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="small" id="progressText">0% completed</div>
+  </section>
+
+  <section class="card">
+    <h2>My Study Plan</h2>
+    <div id="taskList" class="empty">Loading your study plan...</div>
+  </section>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  orderBy,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBZYc90TM1p9eXE56K6V-q1EZrpF_E1aD8",
+  authDomain: "lakshya-tutorial-8d4bf.firebaseapp.com",
+  projectId: "lakshya-tutorial-8d4bf",
+  storageBucket: "lakshya-tutorial-8d4bf.firebasestorage.app",
+  messagingSenderId: "1022368652605",
+  appId: "1:1022368652605:web:9a170b155cfc4fb07bb954"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const taskDate = document.getElementById("taskDate");
+const taskSubject = document.getElementById("taskSubject");
+const taskTitle = document.getElementById("taskTitle");
+const taskDuration = document.getElementById("taskDuration");
+const addTaskBtn = document.getElementById("addTaskBtn");
+const taskList = document.getElementById("taskList");
+const message = document.getElementById("message");
+
+let currentUser = null;
+let tasks = [];
+
+function localDate(){
+  const d = new Date();
+  const offset = d.getTimezoneOffset();
+  return new Date(d.getTime() - offset * 60000).toISOString().slice(0,10);
+}
+taskDate.value = localDate();
+
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+
+function showMessage(text, good=true){
+  message.textContent = text;
+  message.style.color = good ? "#31517f" : "#b42318";
+  setTimeout(()=>{ if(message.textContent === text) message.textContent=""; }, 3000);
+}
+
+async function loadTasks(){
+  if(!currentUser) return;
+
+  taskList.className = "empty";
+  taskList.textContent = "Loading your study plan...";
+
+  try{
+    const q = query(
+      collection(db,"studyPlans"),
+      where("uid","==",currentUser.uid),
+      orderBy("date","asc")
+    );
+
+    const snap = await getDocs(q);
+    tasks = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    renderTasks();
+  }catch(err){
+    console.error(err);
+
+    // Fallback without orderBy if Firestore asks for a composite index.
+    try{
+      const q2 = query(
+        collection(db,"studyPlans"),
+        where("uid","==",currentUser.uid)
+      );
+      const snap2 = await getDocs(q2);
+      tasks = snap2.docs.map(d => ({id:d.id, ...d.data()}));
+      tasks.sort((a,b)=>
+        String(a.date||"").localeCompare(String(b.date||"")) ||
+        Number(a.createdAtMs||0)-Number(b.createdAtMs||0)
+      );
+      renderTasks();
+    }catch(err2){
+      console.error(err2);
+      taskList.className = "empty";
+      taskList.textContent = "Could not load your study plan. Please try again.";
+    }
+  }
+}
+
+function renderTasks(){
+  const today = localDate();
+  const todayTasks = tasks.filter(t => t.date === today);
+  const done = todayTasks.filter(t => t.completed).length;
+  const minutes = todayTasks
+    .filter(t => t.completed)
+    .reduce((sum,t)=>sum + Number(t.duration||0),0);
+
+  document.getElementById("totalToday").textContent = todayTasks.length;
+  document.getElementById("doneToday").textContent = done;
+  document.getElementById("minutesToday").textContent = minutes;
+
+  const percent = todayTasks.length ? Math.round(done/todayTasks.length*100) : 0;
+  document.getElementById("progressBar").style.width = percent + "%";
+  document.getElementById("progressText").textContent = percent + "% completed";
+
+  if(!tasks.length){
+    taskList.className = "empty";
+    taskList.textContent = "No study tasks yet. Add your first task above.";
+    return;
+  }
+
+  taskList.className = "";
+  taskList.innerHTML = tasks.map(t => `
+    <div class="task ${t.completed ? "done" : ""}">
+      <input class="check" type="checkbox" ${t.completed ? "checked" : ""}
+             data-action="toggle" data-id="${t.id}">
+      <div class="task-main">
+        <div class="task-title">${escapeHTML(t.title)}</div>
+        <div class="task-meta">
+          ${escapeHTML(t.subject || "General")} ·
+          ${escapeHTML(t.duration || 0)} min ·
+          ${escapeHTML(t.date || "")}
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="secondary" data-action="edit" data-id="${t.id}">Edit</button>
+        <button class="danger" data-action="delete" data-id="${t.id}">Delete</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function addTask(){
+  if(!currentUser){
+    showMessage("Please login first.", false);
+    return;
+  }
+
+  const date = taskDate.value;
+  const subject = taskSubject.value.trim();
+  const title = taskTitle.value.trim();
+  const duration = Number(taskDuration.value);
+
+  if(!date || !title || !duration || duration < 5){
+    showMessage("Enter date, task/chapter and a duration of at least 5 minutes.", false);
+    return;
+  }
+
+  addTaskBtn.disabled = true;
+  addTaskBtn.textContent = "Saving...";
+
+  try{
+    await addDoc(collection(db,"studyPlans"),{
+      uid: currentUser.uid,
+      date,
+      subject,
+      title,
+      duration,
+      completed:false,
+      createdAt:serverTimestamp(),
+      createdAtMs:Date.now()
+    });
+
+    taskTitle.value = "";
+    taskSubject.value = "";
+    taskDuration.value = 30;
+    showMessage("Study task added.");
+    await loadTasks();
+  }catch(err){
+    console.error(err);
+    showMessage("Could not save the task.", false);
+  }finally{
+    addTaskBtn.disabled = false;
+    addTaskBtn.textContent = "+ Add Task";
+  }
+}
+
+async function toggleTask(id){
+  const task = tasks.find(t=>t.id===id);
+  if(!task) return;
+
+  try{
+    await updateDoc(doc(db,"studyPlans",id),{
+      completed: !task.completed,
+      completedAt: !task.completed ? serverTimestamp() : null
+    });
+    await loadTasks();
+  }catch(err){
+    console.error(err);
+    showMessage("Could not update the task.", false);
+  }
+}
+
+async function deleteTask(id){
+  const task = tasks.find(t=>t.id===id);
+  if(!task) return;
+
+  if(!confirm("Delete this study task?")) return;
+
+  try{
+    await deleteDoc(doc(db,"studyPlans",id));
+    await loadTasks();
+  }catch(err){
+    console.error(err);
+    showMessage("Could not delete the task.", false);
+  }
+}
+
+async function editTask(id){
+  const task = tasks.find(t=>t.id===id);
+  if(!task) return;
+
+  const newTitle = prompt("Task / Chapter:", task.title || "");
+  if(newTitle === null) return;
+
+  const newSubject = prompt("Subject:", task.subject || "");
+  if(newSubject === null) return;
+
+  const newDuration = prompt("Duration in minutes:", task.duration || 30);
+  if(newDuration === null) return;
+
+  const duration = Number(newDuration);
+  if(!newTitle.trim() || !duration || duration < 5){
+    showMessage("Invalid task details.", false);
+    return;
+  }
+
+  try{
+    await updateDoc(doc(db,"studyPlans",id),{
+      title:newTitle.trim(),
+      subject:newSubject.trim(),
+      duration
+    });
+    await loadTasks();
+  }catch(err){
+    console.error(err);
+    showMessage("Could not edit the task.", false);
+  }
+}
+
+taskList.addEventListener("click", async (e)=>{
+  const btn = e.target.closest("button");
+  if(!btn) return;
+
+  const action = btn.dataset.action;
+  const id = btn.dataset.id;
+
+  if(action==="edit") await editTask(id);
+  if(action==="delete") await deleteTask(id);
+});
+
+taskList.addEventListener("change", async (e)=>{
+  if(e.target.dataset.action === "toggle"){
+    await toggleTask(e.target.dataset.id);
+  }
+});
+
+addTaskBtn.addEventListener("click", addTask);
+
+onAuthStateChanged(auth, async user=>{
+  if(!user){
+    currentUser = null;
+    document.getElementById("helloText").textContent =
+      "Please login to use your personal study planner.";
+    taskList.className = "empty";
+    taskList.textContent = "Login is required to create and save study tasks.";
+    addTaskBtn.disabled = true;
+    return;
+  }
+
+  currentUser = user;
+  addTaskBtn.disabled = false;
+  document.getElementById("helloText").textContent =
+    "Your personal study plan is saved to your Lakshya Tutorial account.";
+
+  await loadTasks();
+});
+</script>
+</body>
+</html>
