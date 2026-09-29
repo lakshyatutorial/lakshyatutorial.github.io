@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#172554">
+  <title>Smart Study Timer | Lakshya Tutorial</title>
+  <style>
+    :root{--navy:#172554;--blue:#2563eb;--sky:#eff6ff;--ink:#172033;--muted:#64748b;--line:#e2e8f0;--white:#fff;--green:#059669;--shadow:0 18px 50px rgba(23,37,84,.10)}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eff6ff 0,#f8fafc 340px,#f8fafc 100%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);min-height:100vh}
+    .topbar{background:var(--navy);color:#fff;padding:15px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 5px 22px #17255422}
+    .brand{font-weight:850;letter-spacing:.2px;font-size:1.05rem}.brand small{display:block;font-size:.72rem;font-weight:500;color:#bfdbfe;letter-spacing:.8px;margin-top:3px}
+    .top-actions{display:flex;align-items:center;gap:10px}.user-pill{font-size:.82rem;color:#dbeafe;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    a,.btn{cursor:pointer;text-decoration:none;border:0;border-radius:12px;font-weight:750;transition:transform .15s,background .15s}.btn:hover,a:hover{transform:translateY(-1px)}
+    .back{color:#fff;border:1px solid #ffffff50;padding:10px 13px;font-size:.85rem}
+    main{max-width:1100px;margin:0 auto;padding:30px 18px 55px}.heading{margin:8px 0 24px}.eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:1.7px;color:var(--blue);font-weight:850}.heading h1{margin:8px 0;font-size:clamp(1.8rem,4vw,2.5rem);letter-spacing:-1px;color:var(--navy)}.heading p{margin:0;color:var(--muted);line-height:1.6}
+    .grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:20px;align-items:start}.card{background:var(--white);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow)}.card h2{font-size:1.05rem;margin:0 0 18px;color:var(--navy)}
+    .field{margin-bottom:16px}.field label{display:block;font-size:.84rem;font-weight:750;margin-bottom:8px}.field select,.field input{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:13px 14px;font:inherit;font-size:.95rem;background:#fff;color:var(--ink);outline:none}.field select:focus,.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2563eb20}
+    .durations{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.duration{padding:12px 6px;border:1px solid #cbd5e1;background:#fff;border-radius:12px;color:#334155;font-weight:800}.duration.active{background:var(--sky);border:2px solid var(--blue);color:var(--blue);padding:11px 5px}
+    .timer-wrap{text-align:center;padding:10px 0 2px}.ring{width:min(270px,75vw);aspect-ratio:1;margin:0 auto 20px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--blue) var(--progress,0%),#e2e8f0 0);padding:11px;box-shadow:inset 0 0 0 1px #dbeafe}.ring-inner{background:#fff;width:100%;height:100%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center}.time{font-variant-numeric:tabular-nums;font-size:clamp(2.8rem,8vw,3.7rem);font-weight:850;letter-spacing:-2px;color:var(--navy)}.timer-label{font-size:.8rem;color:var(--muted);font-weight:700;margin-top:6px}.timer-state{min-height:22px;color:var(--green);font-size:.85rem;font-weight:750;margin-bottom:16px}
+    .controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.btn{padding:13px 22px;font-size:.92rem}.primary{background:var(--blue);color:#fff;min-width:140px}.secondary{background:#eff6ff;color:var(--blue);border:1px solid #bfdbfe}.reset{background:#f1f5f9;color:#475569}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}.stat{background:linear-gradient(135deg,#eff6ff,#f8fafc);border:1px solid #dbeafe;border-radius:16px;padding:18px}.stat .number{font-size:1.8rem;font-weight:850;color:var(--navy);letter-spacing:-.8px}.stat .label{font-size:.8rem;color:var(--muted);font-weight:700;margin-top:4px}
+    .recent-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 12px}.recent-head h2{margin:0}.date-label{font-size:.75rem;color:var(--muted);font-weight:700}.sessions{display:flex;flex-direction:column;gap:10px}.session{border:1px solid var(--line);border-radius:14px;padding:13px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.session-title{font-weight:800;font-size:.9rem;overflow-wrap:anywhere}.session-sub{font-size:.76rem;color:var(--muted);margin-top:5px}.minutes{font-weight:850;color:var(--blue);white-space:nowrap;font-size:.9rem}.empty{padding:22px 14px;text-align:center;color:var(--muted);background:#f8fafc;border:1px dashed #cbd5e1;border-radius:14px;font-size:.88rem;line-height:1.5}
+    .notice{display:none;margin:0 0 18px;padding:13px 15px;border-radius:12px;font-size:.88rem;line-height:1.5}.notice.error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}.notice.success{display:block;background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}.loading{color:var(--muted);font-size:.85rem}
+    footer{text-align:center;color:#94a3b8;font-size:.78rem;margin-top:26px}
+    @media(max-width:780px){.grid{grid-template-columns:1fr}.card{padding:20px}.topbar{padding:13px 16px}.user-pill{display:none}main{padding:24px 14px 40px}}
+    @media(max-width:380px){.durations{gap:6px}.duration{font-size:.85rem}.controls .btn{flex:1;padding:12px 10px;min-width:0}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">LAKSHYA TUTORIAL<small>LEARN • FOCUS • ACHIEVE</small></div>
+    <div class="top-actions"><span class="user-pill" id="userEmail">Checking login…</span><a class="back" href="student-dashboard.html">← Dashboard</a></div>
+  </header>
+  <main>
+    <div class="heading"><div class="eyebrow">Student workspace · Feature 08</div><h1>Smart Study Timer</h1><p>One focused session at a time. Build consistency and track your progress.</p></div>
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+    <div class="grid">
+      <section class="card">
+        <h2>Set up your focus session</h2>
+        <div class="field"><label for="subject">Subject</label><select id="subject"><option value="">Choose a subject</option><option>Mathematics</option><option>Science</option><option>English</option><option>Social Science</option><option>Computer</option><option>Hindi</option><option>Bengali</option><option>Other</option></select></div>
+        <div class="field"><label for="task">Task / Chapter <span style="font-weight:500;color:#94a3b8">(optional)</span></label><input id="task" maxlength="120" placeholder="e.g. Chapter 4 — Linear Equations"></div>
+        <div class="field"><label>Session length</label><div class="durations" id="durations"><button class="duration active" data-min="25" type="button">25 min</button><button class="duration" data-min="45" type="button">45 min</button><button class="duration" data-min="50" type="button">50 min</button><button class="duration" data-min="60" type="button">60 min</button></div></div>
+        <div class="timer-wrap">
+          <div class="ring" id="ring" style="--progress:0%"><div class="ring-inner"><div class="time" id="time">25:00</div><div class="timer-label">FOCUS TIME</div></div></div>
+          <div class="timer-state" id="timerState">Ready when you are</div>
+          <div class="controls"><button class="btn primary" id="startBtn" type="button">Start studying</button><button class="btn secondary" id="pauseBtn" type="button" disabled>Pause</button><button class="btn reset" id="resetBtn" type="button">Reset</button></div>
+        </div>
+      </section>
+      <aside class="card">
+        <h2>Your study progress</h2>
+        <div class="stats"><div class="stat"><div class="number" id="todayMinutes">—</div><div class="label">Minutes studied today</div></div><div class="stat"><div class="number" id="todayCount">—</div><div class="label">Sessions completed today</div></div></div>
+        <div class="recent-head"><h2>Recent sessions</h2><span class="date-label">Latest 8</span></div>
+        <div class="sessions" id="sessions"><div class="empty">Loading your study history…</div></div>
+      </aside>
+    </div>
+    <footer>Stay consistent. Every focused minute counts. · Lakshya Tutorial</footer>
+  </main>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, where, getDocs, orderBy, limit, Timestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZYc90TM1p9eXE56K6V-q1EZrpF_EaD8",
+      authDomain: "lakshya-tutorial-8d4bf.firebaseapp.com",
+      projectId: "lakshya-tutorial-8d4bf",
+      storageBucket: "lakshya-tutorial-8d4bf.firebasestorage.app",
+      messagingSenderId: "1022368652605",
+      appId: "1:1022368652605:web:9a170b155cfc4fb07bb954"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const $ = id => document.getElementById(id);
+    let user = null, selectedMinutes = 25, remaining = 1500, interval = null, running = false, sessionStartedAt = null, sessionStartMs = null, saving = false;
+
+    function notice(message, type="error"){ const el=$("notice"); el.textContent=message; el.className="notice "+type; }
+    function clearNotice(){ $("notice").className="notice"; $("notice").textContent=""; }
+    function renderTimer(){
+      const mins=Math.floor(remaining/60), secs=remaining%60;
+      $("time").textContent=String(mins).padStart(2,"0")+":"+String(secs).padStart(2,"0");
+      const elapsed=selectedMinutes*60-remaining;
+      $("ring").style.setProperty("--progress",Math.min(100,Math.max(0,elapsed/(selectedMinutes*60)*100))+"%");
+    }
+    function stopInterval(){ if(interval!==null){clearInterval(interval);interval=null;} }
+    function resetTimer(){
+      stopInterval(); running=false; remaining=selectedMinutes*60; sessionStartedAt=null; sessionStartMs=null;
+      $("startBtn").disabled=false; $("startBtn").textContent="Start studying"; $("pauseBtn").disabled=true; $("pauseBtn").textContent="Pause"; $("timerState").textContent="Ready when you are"; renderTimer();
+    }
+    function chooseDuration(min){
+      if(running || saving) return;
+      selectedMinutes=min;
+      document.querySelectorAll(".duration").forEach(b=>b.classList.toggle("active",Number(b.dataset.min)===min));
+      resetTimer();
+    }
+    document.querySelectorAll(".duration").forEach(b=>b.addEventListener("click",()=>chooseDuration(Number(b.dataset.min))));
+    $("resetBtn").addEventListener("click",()=>{resetTimer();clearNotice();});
+    $("startBtn").addEventListener("click",()=>{
+      clearNotice();
+      if(!user){notice("Please sign in to start a study session.");return;}
+      if(!$("subject").value){notice("Please select a subject before starting.");$("subject").focus();return;}
+      if(running || saving)return;
+      if(remaining===selectedMinutes*60){sessionStartedAt=new Date();sessionStartMs=Date.now();}
+      running=true; $("startBtn").disabled=true; $("pauseBtn").disabled=false; $("timerState").textContent="Stay focused — you've got this!";
+      interval=setInterval(async()=>{
+        const elapsed=Math.floor((Date.now()-sessionStartMs)/1000);
+        remaining=Math.max(0,selectedMinutes*60-elapsed); renderTimer();
+        if(remaining<=0){stopInterval();running=false;await completeSession();}
+      },250);
+    });
+    $("pauseBtn").addEventListener("click",()=>{
+      if(running){stopInterval();running=false;$("pauseBtn").textContent="Resume";$("startBtn").disabled=true;$("timerState").textContent="Paused — take your time."; }
+      else if(user && sessionStartMs!==null && remaining>0){
+        // Preserve elapsed time accurately across pauses.
+        sessionStartMs=Date.now()-(selectedMinutes*60-remaining)*1000;
+        running=true;$("pauseBtn").textContent="Pause";$("timerState").textContent="Back to focus!";
+        interval=setInterval(async()=>{const elapsed=Math.floor((Date.now()-sessionStartMs)/1000);remaining=Math.max(0,selectedMinutes*60-elapsed);renderTimer();if(remaining<=0){stopInterval();running=false;await completeSession();}},250);
+      }
+    });
+    async function completeSession(){
+      $("pauseBtn").disabled=true;$("startBtn").disabled=true;$("timerState").textContent="Session complete! Saving your progress…";
+      if(saving)return;saving=true;
+      try{
+        const completedAt=Timestamp.now();
+        await addDoc(collection(db,"studySessions"),{
+          uid:user.uid, subject:$("subject").value, task:$("task").value.trim(),
+          duration:selectedMinutes, date:new Date().toISOString().slice(0,10),
+          completedAt, createdAt:completedAt
+        });
+        notice("Great work! Your completed session has been saved.","success");
+        $("timerState").textContent="Well done — session saved.";
+        await loadSessions();
+      }catch(err){console.error(err);notice("Your session finished, but saving failed. Check your connection and Firestore rules, then contact your site administrator. This session has not been recorded.");$("timerState").textContent="Session complete — save failed.";}
+      finally{saving=false;$("startBtn").disabled=false;$("startBtn").textContent="Start next session";$("pauseBtn").disabled=true;}
+    }
+    function localDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+    function formatDate(value){
+      const d=value?.toDate?value.toDate():(value instanceof Date?value:new Date(value));
+      if(Number.isNaN(d.getTime()))return "Date unavailable";
+      return d.toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+    }
+    async function loadSessions(){
+      if(!user)return;
+      const q=query(collection(db,"studySessions"),where("uid","==",user.uid),orderBy("completedAt","desc"),limit(50));
+      const snap=await getDocs(q); const all=snap.docs.map(d=>({id:d.id,...d.data()}));
+      const today=localDate(new Date());
+      const todays=all.filter(s=>s.date===today);
+      $("todayMinutes").textContent=todays.reduce((sum,s)=>sum+(Number(s.duration)||0),0);
+      $("todayCount").textContent=todays.length;
+      const recent=all.slice(0,8); const container=$("sessions");container.replaceChildren();
+      if(!recent.length){container.innerHTML='<div class="empty">No completed sessions yet.<br>Finish your first focus session and it will appear here.</div>';return;}
+      recent.forEach(s=>{
+        const row=document.createElement("div");row.className="session";
+        const left=document.createElement("div");left.style.minWidth="0";
+        const title=document.createElement("div");title.className="session-title";title.textContent=s.subject||"Study session";
+        const sub=document.createElement("div");sub.className="session-sub";sub.textContent=(s.task?s.task+" · ":"")+formatDate(s.completedAt);
+        const right=document.createElement("div");right.className="minutes";right.textContent=(Number(s.duration)||0)+" min";
+        left.append(title,sub);row.append(left,right);container.append(row);
+      });
+    }
+    onAuthStateChanged(auth,async currentUser=>{
+      if(!currentUser){location.replace("student-login.html?redirect=study-timer.html");return;}
+      user=currentUser;$("userEmail").textContent=currentUser.email||"Student";
+      try{await loadSessions();}catch(err){console.error(err);$("sessions").innerHTML='<div class="empty">Could not load your study history. Check your Firestore indexes and security rules.</div>';notice("Could not load study history. Ensure your Firestore rules allow authenticated users to read only their own sessions.");}
+    });
+    renderTimer();
+  </script>
+</body>
+</html>
